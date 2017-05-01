@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	
 
@@ -109,9 +110,17 @@ func CreateCompany(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	}
 
 	var companyId = args[0]
-	var companyInput = args[1]
+	//var companyInput = args[1]
 
-	err := stub.PutState(companyId, []byte(companyInput))
+	companyname := strings.ToLower(args[1])
+	companycontact := strings.ToLower(args[2])
+	companybudget := strings.ToLower(args[3])
+	
+
+	str := `{"companyname": "` + companyname + `", "companycontact": "` + companycontact + `", "companybudget": ` + companybudget + `, "companyId": "` + companyId + `"}`
+
+
+	err := stub.PutState(companyId, []byte(str))
 	if err != nil {
 		logger.Error("Could not save company info to ledger", err)
 		return nil, err
