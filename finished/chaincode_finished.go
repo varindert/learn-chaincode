@@ -57,10 +57,10 @@ func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 
 // query function entry point
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if function == "GetCompany" {
+	if function == "getcompanyinfo" {
 		return GetCompanyInfo(stub, args)
 	}
-	fmt.Println("invoke did not find func: " + function)
+	fmt.Println("Query did not find func: " + function)
 	return nil, nil
 }
 
@@ -76,7 +76,7 @@ func GetCompanyInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 	var CompanyID = args[0]
 	bytes, err := stub.GetState(CompanyID)
 	if err != nil {
-		logger.Error("Could not fetch loan application with id "+CompanyID+" from ledger", err)
+		logger.Error("Could not fetch company info with id "+CompanyID+" from ledger", err)
 		return nil, err
 	}
 	return bytes, nil
