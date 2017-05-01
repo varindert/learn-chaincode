@@ -15,7 +15,7 @@ type SampleChaincode struct {
 }
 
 //custom data models
-type ComppanyInfo struct {
+type CompanyInfo struct {
 	Companyname string `json:"companyname"`
 	Companycontact  string `json:"companycontact"`
 	Companybudget  int `json:"companybudget"`
@@ -60,6 +60,7 @@ func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	if function == "GetCompany" {
 		return GetCompanyInfo(stub, args)
 	}
+	fmt.Println("invoke did not find func: " + function)
 	return nil, nil
 }
 
