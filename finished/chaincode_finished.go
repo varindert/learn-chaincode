@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"encoding/json"
+	
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -41,39 +41,12 @@ type ManagerInfo struct {
 
 
 func main() {
-	err := shim.Start(new(SimpleChaincode))
+	err := shim.Start(new(SampleChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
 }
 
-func CreateCompany(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	logger.Debug("Entering CreateCompany")
-
-	if len(args) < 2 {
-		logger.Error("Invalid number of args")
-		return nil, errors.New("Expected atleast two arguments for create company creation")
-	}
-
-	var companyId = args[0]
-	var companyInput = args[1]
-
-	err := stub.PutState(companyId, []byte(companyInput))
-	if err != nil {
-		logger.Error("Could not save company info to ledger", err)
-		return nil, err
-	}
-
-	//var customEvent = "{eventType: 'loanApplicationCreation', description:" + loanApplicationId + "' Successfully created'}"
-	//err = stub.SetEvent("evtSender", []byte(customEvent))
-	
-	if err != nil {
-		return nil, err
-	}
-	logger.Info("Successfully saved loan application")
-	return nil, nil
-
-}
 
 func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	return nil, nil
@@ -110,16 +83,45 @@ func GetCompanyInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 
 
 // Invoke entry point to invoke a chaincode function
-func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
 	 if function == "createcompany" {
-		return t.CreateCompany(stub, args)
+		return CreateCompany(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function)
 
 	return nil, errors.New("Received unknown function invocation: " + function)
+}
+
+
+func CreateCompany(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	logger.Debug("Entering CreateCompany")
+
+	if len(args) < 2 {
+		logger.Error("Invalid number of args")
+		return nil, errors.New("Expected atleast two arguments for create company creation")
+	}
+
+	var companyId = args[0]
+	var companyInput = args[1]
+
+	err := stub.PutState(companyId, []byte(companyInput))
+	if err != nil {
+		logger.Error("Could not save company info to ledger", err)
+		return nil, err
+	}
+
+	//var customEvent = "{eventType: 'loanApplicationCreation', description:" + loanApplicationId + "' Successfully created'}"
+	//err = stub.SetEvent("evtSender", []byte(customEvent))
+	
+	if err != nil {
+		return nil, err
+	}
+	logger.Info("Successfully saved loan application")
+	return nil, nil
+
 }
 
 // rename this file as chaincode_finished, build it and check into github finished branch, this way I don't have to register and quickly test if a company can be created.
