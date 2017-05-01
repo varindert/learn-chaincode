@@ -59,6 +59,8 @@ func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	if function == "getcompanyinfo" {
 		return GetCompanyInfo(stub, args)
+	}else if function == "read" {
+		return t.read(stub, args)
 	}
 	fmt.Println("Query did not find func: " + function)
 	return nil, nil
@@ -123,6 +125,26 @@ func CreateCompany(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	logger.Info("Successfully saved loan application")
 	return nil, nil
 
+}
+
+
+// read - query function to read key/value pair
+func (t *SampleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	var key, jsonResp string
+	var err error
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
+	}
+
+	key = args[0]
+	valAsbytes, err := stub.GetState(key)
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	return valAsbytes, nil
 }
 
 // rename this file as chaincode_finished, build it and check into github finished branch, this way I don't have to register and quickly test if a company can be created.
