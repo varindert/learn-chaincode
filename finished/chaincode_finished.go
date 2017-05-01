@@ -58,7 +58,7 @@ func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 // query function entry point
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	if function == "getcompanyinfo" {
-		return GetCompanyInfo(stub, args)
+		return t.GetCompanyInfo(stub, args)
 	}else if function == "read" {
 		return t.read(stub, args)
 	}
@@ -67,7 +67,8 @@ func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 }
 
 // get companyinfo
-func GetCompanyInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *SampleChaincode) GetCompanyInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+//func GetCompanyInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	logger.Debug("Entering GetCompanyInfo")
 
 	if len(args) < 1 {
