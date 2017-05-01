@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"encoding/json"
+	"strings"
 
 	
 
@@ -109,23 +109,23 @@ func CreateCompany(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 		return nil, errors.New("Expected atleast two arguments for create company creation")
 	}
 
-	//var companyId = args[0]
+	var companyId = args[0]
 	//var companyInput = args[1]
 
 	
 
-	//companyname := strings.ToLower(args[1])
-	//companycontact := strings.ToLower(args[2])
-	//companybudget := strings.ToLower(args[3])
+	companyname := strings.ToLower(args[1])
+	companycontact := strings.ToLower(args[2])
+	companybudget := strings.ToLower(args[3])
 	
-	var personalInfo CompanyInfo
-	personalInfo = CompanyInfo{"Varun", "Ojha", 1000, "varun@gmail.com", "9999999999"}
+	//var personalInfo CompanyInfo
+	//personalInfo = CompanyInfo{"Varun", "Ojha", 1000, "varun@gmail.com", "9999999999"}
 
-	//str := `{"companyname": "` + companyname + `", "companycontact": "` + companycontact + `", "companybudget": ` + companybudget + `, "companyId": "` + companyId + `"}`
+	str := `{"companyname": "` + companyname + `", "companycontact": "` + companycontact + `", "companybudget": ` + companybudget + `, "companyId": "` + companyId + `"}`
 
-	jsonAsBytes, err := json.Marshal (&personalInfo)
+	//jsonAsBytes, err := json.Marshal (&personalInfo)
 
-	err = stub.PutState("companyId", jsonAsBytes)
+	err := stub.PutState("companyId", []byte(str))
 	if err != nil {
 		logger.Error("Could not save company info to ledger", err)
 		return nil, err
