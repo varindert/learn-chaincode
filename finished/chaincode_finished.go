@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"encoding/json"
 
 	
 
@@ -153,7 +154,15 @@ func (t *SampleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	key = args[0]
-	valAsbytes, err := stub.GetState(key)
+	//valAsbytes, err := stub.GetState(key)
+	
+	valAsbytes, err := stub.GetState("companyId") 
+	var personalInfo CompanyInfo
+	err = json.Unmarshal(valAsbytes, &personalInfo)
+	
+	//fmt.Println(personalInfo.Firstname)
+
+
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
 		return nil, errors.New(jsonResp)
@@ -161,6 +170,8 @@ func (t *SampleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	return valAsbytes, nil
 }
+
+
 
 // rename this file as chaincode_finished, build it and check into github finished branch, this way I don't have to register and quickly test if a company can be created.
 // make post request from postman to test create company and return company
